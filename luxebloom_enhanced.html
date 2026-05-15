@@ -1,0 +1,1361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LuxeBloom • Luxury Closet</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+  <!-- GSAP for Premium Animations -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            'display': ['"Playfair Display"', 'serif'],
+            'body': ['"Inter"', 'sans-serif'],
+          },
+          colors: {
+            'luxury': {
+              black: '#0a0a0a',
+              dark: '#111111',
+              gold: '#c9a96e',
+              'gold-light': '#d4b87a',
+              cream: '#f5f0e8',
+              gray: '#1a1a1a',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    :root {
+      --gold: #c9a96e;
+      --gold-light: #d4b87a;
+      --black: #0a0a0a;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--black);
+      color: #ffffff;
+      overflow-x: hidden;
+    }
+
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #111; }
+    ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--gold); }
+
+    .glass {
+      background: rgba(10, 10, 10, 0.7);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .glass-light {
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .hero-bg {
+      position: relative;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .hero-bg::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-image: linear-gradient(rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.7) 100%),
+                        url('https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=2000&q=80');
+      background-size: cover;
+      background-position: center;
+      animation: kenBurns 20s ease-in-out infinite alternate;
+      z-index: -1;
+    }
+
+    @keyframes kenBurns {
+      0% { transform: scale(1); }
+      100% { transform: scale(1.1); }
+    }
+
+    .reveal-text {
+      opacity: 0;
+      transform: translateY(40px);
+    }
+
+    .magnetic-btn {
+      position: relative;
+      overflow: hidden;
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .magnetic-btn::before {
+      content: '';
+      position: absolute;
+      top: 50%; left: 50%;
+      width: 0; height: 0;
+      background: var(--gold);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1), height 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 0;
+    }
+
+    .magnetic-btn:hover::before { width: 300%; height: 300%; }
+    .magnetic-btn span { position: relative; z-index: 1; }
+    .magnetic-btn:hover {
+      color: var(--black);
+      transform: translateY(-2px);
+      box-shadow: 0 20px 40px rgba(201, 169, 110, 0.3);
+    }
+
+    .product-card {
+      position: relative;
+      overflow: hidden;
+      transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .product-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 50%);
+      opacity: 0;
+      transition: opacity 0.4s ease;
+      pointer-events: none;
+    }
+
+    .product-card:hover::after { opacity: 1; }
+    .product-card:hover {
+      transform: translateY(-16px);
+      box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.5);
+    }
+
+    .product-image {
+      transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .product-card:hover .product-image { transform: scale(1.08); }
+
+    .product-overlay {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      padding: 2rem;
+      transform: translateY(20px);
+      opacity: 0;
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 10;
+    }
+
+    .product-card:hover .product-overlay {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .gold-line {
+      width: 60px;
+      height: 1px;
+      background: linear-gradient(90deg, var(--gold), transparent);
+      margin: 1.5rem auto;
+    }
+
+    .nav-link { position: relative; }
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -4px; left: 0;
+      width: 0; height: 1px;
+      background: var(--gold);
+      transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .nav-link:hover::after { width: 100%; }
+
+    @keyframes cartBounce {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.3); }
+    }
+    .cart-badge { animation: cartBounce 0.3s ease; }
+
+    .loader {
+      position: fixed;
+      inset: 0;
+      background: var(--black);
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.8s ease, visibility 0.8s ease;
+    }
+    .loader.hidden { opacity: 0; visibility: hidden; }
+
+    .loader-text {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      letter-spacing: 0.3em;
+      color: var(--gold);
+      animation: loaderPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes loaderPulse {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 1; }
+    }
+
+    .section-divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(201, 169, 110, 0.3), transparent);
+      margin: 0 auto;
+      max-width: 200px;
+    }
+
+    .mobile-menu {
+      transform: translateX(100%);
+      transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .mobile-menu.open { transform: translateX(0); }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+      .hero-bg::before { animation: none; }
+    }
+
+    ::selection {
+      background: rgba(201, 169, 110, 0.3);
+      color: #fff;
+    }
+
+    /* ===== CART SIDEBAR ===== */
+    .cart-sidebar {
+      position: fixed;
+      top: 0; right: 0;
+      width: 100%; max-width: 480px;
+      height: 100vh;
+      background: #0f0f0f;
+      border-left: 1px solid rgba(255,255,255,0.05);
+      z-index: 100;
+      transform: translateX(100%);
+      transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      flex-direction: column;
+    }
+    .cart-sidebar.open { transform: translateX(0); }
+    .cart-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(4px);
+      z-index: 99;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.4s ease;
+    }
+    .cart-overlay.open { opacity: 1; visibility: visible; }
+
+    .cart-item {
+      display: flex;
+      gap: 1rem;
+      padding: 1rem;
+      background: rgba(255,255,255,0.02);
+      border-radius: 12px;
+      margin-bottom: 0.75rem;
+      border: 1px solid rgba(255,255,255,0.03);
+      transition: all 0.3s ease;
+    }
+    .cart-item:hover { border-color: rgba(201,169,110,0.2); }
+
+    .qty-btn {
+      width: 28px; height: 28px;
+      border-radius: 6px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: transparent;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 12px;
+    }
+    .qty-btn:hover { background: var(--gold); color: black; border-color: var(--gold); }
+
+    .remove-btn {
+      width: 28px; height: 28px;
+      border-radius: 6px;
+      border: 1px solid rgba(239,68,68,0.2);
+      background: transparent;
+      color: #ef4444;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 12px;
+    }
+    .remove-btn:hover { background: #ef4444; color: white; }
+
+    /* ===== VIRTUAL TRY-ON ===== */
+    .tryon-container {
+      position: relative;
+      width: 100%;
+      max-width: 800px;
+      margin: 0 auto;
+      border-radius: 24px;
+      overflow: hidden;
+      background: #111;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+
+    #webcamVideo, #tryonCanvas {
+      width: 100%;
+      height: auto;
+      display: block;
+      transform: scaleX(-1); /* Mirror effect */
+    }
+
+    #tryonCanvas {
+      position: absolute;
+      top: 0; left: 0;
+      pointer-events: none;
+    }
+
+    .tryon-controls {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      padding: 2rem;
+      background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .tryon-item-btn {
+      padding: 0.75rem 1.5rem;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.05);
+      color: white;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .tryon-item-btn:hover, .tryon-item-btn.active {
+      border-color: var(--gold);
+      background: rgba(201,169,110,0.1);
+      color: var(--gold);
+    }
+
+    .capture-btn {
+      width: 64px; height: 64px;
+      border-radius: 50%;
+      border: 3px solid var(--gold);
+      background: transparent;
+      cursor: pointer;
+      position: relative;
+      transition: all 0.3s ease;
+    }
+    .capture-btn::after {
+      content: '';
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      background: var(--gold);
+      transition: all 0.2s ease;
+    }
+    .capture-btn:hover::after { width: 52px; height: 52px; }
+    .capture-btn:active::after { width: 44px; height: 44px; }
+
+    .webcam-placeholder {
+      width: 100%;
+      aspect-ratio: 4/3;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1.5rem;
+      background: linear-gradient(135deg, #111, #1a1a1a);
+    }
+
+    @keyframes marquee {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+    .animate-marquee {
+      animation: marquee 30s linear infinite;
+    }
+  </style>
+</head>
+<body class="bg-luxury-black text-white antialiased">
+
+  <!-- Loading Screen -->
+  <div class="loader" id="loader">
+    <div class="loader-text">LUXEBLOOM</div>
+  </div>
+
+  <!-- Cart Overlay -->
+  <div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
+
+  <!-- Cart Sidebar -->
+  <div class="cart-sidebar" id="cartSidebar">
+    <div class="p-6 border-b border-white/5 flex justify-between items-center">
+      <div>
+        <h2 class="text-2xl font-display">Your Closet</h2>
+        <p class="text-gray-500 text-sm mt-1"><span id="cartItemCount">0</span> items</p>
+      </div>
+      <button onclick="closeCart()" class="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center hover:border-luxury-gold hover:text-luxury-gold transition-all duration-300">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+    <div class="flex-1 overflow-y-auto p-6" id="cartItems">
+      <!-- Cart items injected here -->
+      <div class="text-center py-16 text-gray-500" id="emptyCart">
+        <i class="fa-solid fa-bag-shopping text-4xl mb-4 opacity-30"></i>
+        <p class="font-light">Your closet is empty</p>
+        <p class="text-sm mt-2 opacity-60">Add pieces to begin your collection</p>
+      </div>
+    </div>
+
+    <div class="p-6 border-t border-white/5 bg-luxury-dark">
+      <div class="flex justify-between items-center mb-2">
+        <span class="text-gray-400 text-sm">Subtotal</span>
+        <span class="font-display text-lg" id="cartSubtotal">KSh 0</span>
+      </div>
+      <div class="flex justify-between items-center mb-4">
+        <span class="text-gray-400 text-sm">Shipping</span>
+        <span class="text-luxury-gold text-sm">Free</span>
+      </div>
+      <div class="section-divider !max-w-full !my-4"></div>
+      <div class="flex justify-between items-center mb-6">
+        <span class="text-lg font-medium">Total</span>
+        <span class="font-display text-2xl text-luxury-gold" id="cartTotal">KSh 0</span>
+      </div>
+      <button class="magnetic-btn w-full bg-luxury-gold text-black py-4 rounded-xl font-medium uppercase tracking-wider text-sm" onclick="checkout()">
+        <span>Proceed to Checkout</span>
+      </button>
+      <button onclick="clearCart()" class="w-full mt-3 text-gray-500 text-sm hover:text-red-400 transition-colors py-2">
+        Clear Closet
+      </button>
+    </div>
+  </div>
+
+  <!-- Navbar -->
+  <nav class="fixed top-0 w-full glass z-50 transition-all duration-500" id="navbar">
+    <div class="max-w-7xl mx-auto px-6 py-5 flex justify-between items-center">
+      <a href="#" class="group">
+        <h1 class="text-2xl md:text-3xl font-display font-bold tracking-[0.2em] text-white group-hover:text-luxury-gold transition-colors duration-300">
+          LUXEBLOOM
+        </h1>
+      </a>
+
+      <div class="hidden md:flex gap-10 text-xs uppercase tracking-[0.2em] font-medium">
+        <a href="#shop" class="nav-link hover:text-luxury-gold transition-colors duration-300">Shop</a>
+        <a href="#collections" class="nav-link hover:text-luxury-gold transition-colors duration-300">Collections</a>
+        <a href="#tryon" class="nav-link hover:text-luxury-gold transition-colors duration-300">Virtual Try-On</a>
+        <a href="#about" class="nav-link hover:text-luxury-gold transition-colors duration-300">About</a>
+      </div>
+
+      <div class="flex items-center gap-6">
+        <button class="hover:text-luxury-gold transition-colors duration-300" aria-label="Search">
+          <i class="fa-solid fa-magnifying-glass text-lg"></i>
+        </button>
+        <button class="hover:text-luxury-gold transition-colors duration-300 relative" aria-label="Wishlist">
+          <i class="fa-solid fa-heart text-lg"></i>
+        </button>
+        <button class="hover:text-luxury-gold transition-colors duration-300 relative group" aria-label="Shopping Bag" onclick="openCart()">
+          <i class="fa-solid fa-bag-shopping text-lg"></i>
+          <span class="absolute -top-2 -right-2 bg-luxury-gold text-black text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center transition-all duration-300" id="cartCount">0</span>
+        </button>
+        <button class="md:hidden hover:text-luxury-gold transition-colors" id="mobileMenuBtn" aria-label="Menu">
+          <i class="fa-solid fa-bars text-xl"></i>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu fixed inset-0 bg-luxury-black z-40 flex flex-col items-center justify-center gap-8 md:hidden" id="mobileMenu">
+    <button class="absolute top-6 right-6 text-2xl hover:text-luxury-gold transition-colors" id="closeMenuBtn">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+    <a href="#shop" class="text-2xl font-display tracking-widest hover:text-luxury-gold transition-colors mobile-link">Shop</a>
+    <a href="#collections" class="text-2xl font-display tracking-widest hover:text-luxury-gold transition-colors mobile-link">Collections</a>
+    <a href="#tryon" class="text-2xl font-display tracking-widest hover:text-luxury-gold transition-colors mobile-link">Virtual Try-On</a>
+    <a href="#about" class="text-2xl font-display tracking-widest hover:text-luxury-gold transition-colors mobile-link">About</a>
+  </div>
+
+  <!-- Hero Section -->
+  <section class="hero-bg flex items-center justify-center text-center relative">
+    <div class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-luxury-black"></div>
+    <div class="max-w-4xl px-6 relative z-10">
+      <p class="text-luxury-gold text-sm uppercase tracking-[0.4em] mb-6 reveal-text" id="heroSubtitle">Nairobi, Kenya</p>
+      <h2 class="text-5xl md:text-7xl lg:text-8xl font-display font-light tracking-wider mb-6 reveal-text leading-tight" id="heroTitle">
+        Bloom in<br><span class="italic text-luxury-gold">Luxury</span>
+      </h2>
+      <div class="gold-line reveal-text"></div>
+      <p class="text-lg md:text-xl mb-12 text-gray-300 font-light max-w-2xl mx-auto reveal-text leading-relaxed" id="heroDesc">
+        Curated designer pieces for the modern woman who blooms effortlessly. 
+        Discover timeless elegance crafted for your unique story.
+      </p>
+      <button onclick="document.getElementById('shop').scrollIntoView({behavior:'smooth'})" 
+              class="magnetic-btn bg-white text-black px-12 py-5 text-sm uppercase tracking-[0.3em] font-medium reveal-text">
+        <span>Explore Collection</span>
+      </button>
+    </div>
+    <div class="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-bounce">
+      <span class="text-[10px] uppercase tracking-[0.3em] text-gray-400">Scroll</span>
+      <i class="fa-solid fa-chevron-down text-luxury-gold text-sm"></i>
+    </div>
+  </section>
+
+  <!-- Marquee -->
+  <div class="py-8 border-y border-white/5 overflow-hidden bg-luxury-dark">
+    <div class="flex whitespace-nowrap animate-marquee">
+      <span class="text-4xl md:text-6xl font-display italic text-white/5 mx-8">Timeless Elegance</span>
+      <span class="text-4xl md:text-6xl font-display italic text-luxury-gold/20 mx-8">•</span>
+      <span class="text-4xl md:text-6xl font-display italic text-white/5 mx-8">Curated Luxury</span>
+      <span class="text-4xl md:text-6xl font-display italic text-luxury-gold/20 mx-8">•</span>
+      <span class="text-4xl md:text-6xl font-display italic text-white/5 mx-8">Bloom Effortlessly</span>
+      <span class="text-4xl md:text-6xl font-display italic text-luxury-gold/20 mx-8">•</span>
+      <span class="text-4xl md:text-6xl font-display italic text-white/5 mx-8">Timeless Elegance</span>
+      <span class="text-4xl md:text-6xl font-display italic text-luxury-gold/20 mx-8">•</span>
+      <span class="text-4xl md:text-6xl font-display italic text-white/5 mx-8">Curated Luxury</span>
+      <span class="text-4xl md:text-6xl font-display italic text-luxury-gold/20 mx-8">•</span>
+    </div>
+  </div>
+
+  <!-- Featured Products -->
+  <section id="shop" class="max-w-7xl mx-auto px-6 py-32">
+    <div class="text-center mb-20">
+      <p class="text-luxury-gold text-xs uppercase tracking-[0.4em] mb-4 reveal-text">The Collection</p>
+      <h2 class="text-4xl md:text-6xl font-display font-light reveal-text">Signature Pieces</h2>
+      <div class="gold-line reveal-text"></div>
+      <p class="text-gray-400 max-w-xl mx-auto reveal-text font-light">
+        Each piece is thoughtfully selected to embody sophistication and timeless beauty.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8" id="productsGrid">
+      <!-- Products injected via JS -->
+    </div>
+
+    <div class="text-center mt-16">
+      <button class="magnetic-btn border border-white/20 text-white px-10 py-4 text-sm uppercase tracking-[0.3em] hover:border-luxury-gold transition-all duration-500">
+        <span>View All Pieces</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- Virtual Try-On Section -->
+  <section id="tryon" class="py-32 bg-luxury-dark relative overflow-hidden">
+    <div class="absolute inset-0 opacity-20">
+      <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-luxury-gold rounded-full filter blur-[200px]"></div>
+    </div>
+
+    <div class="max-w-6xl mx-auto px-6 relative z-10">
+      <div class="text-center mb-16">
+        <p class="text-luxury-gold text-xs uppercase tracking-[0.4em] mb-4 reveal-text">Experience</p>
+        <h2 class="text-4xl md:text-6xl font-display font-light reveal-text">Virtual Try-On</h2>
+        <div class="gold-line reveal-text"></div>
+        <p class="text-gray-400 max-w-xl mx-auto reveal-text font-light">
+          See how our pieces look on you in real-time. Enable your camera and select an item to overlay.
+        </p>
+      </div>
+
+      <div class="tryon-container reveal-text">
+        <!-- Webcam Placeholder / Video -->
+        <div id="webcamContainer">
+          <div class="webcam-placeholder" id="webcamPlaceholder">
+            <div class="w-20 h-20 rounded-full border-2 border-luxury-gold/30 flex items-center justify-center mb-2">
+              <i class="fa-solid fa-camera text-3xl text-luxury-gold/50"></i>
+            </div>
+            <p class="text-gray-400 font-light">Camera is off</p>
+            <button onclick="startWebcam()" class="magnetic-btn bg-luxury-gold text-black px-8 py-3 rounded-xl text-sm uppercase tracking-wider font-medium mt-4">
+              <span><i class="fa-solid fa-video mr-2"></i>Enable Camera</span>
+            </button>
+          </div>
+          <video id="webcamVideo" autoplay playsinline style="display:none;"></video>
+          <canvas id="tryonCanvas" style="display:none;"></canvas>
+        </div>
+
+        <!-- Try-On Controls -->
+        <div class="tryon-controls" id="tryonControls" style="display:none;">
+          <div class="flex flex-wrap gap-2 justify-center w-full mb-2">
+            <button class="tryon-item-btn active" onclick="selectTryonItem('necklace')" data-item="necklace">
+              <i class="fa-solid fa-gem"></i> Pearl Necklace
+            </button>
+            <button class="tryon-item-btn" onclick="selectTryonItem('earrings')" data-item="earrings">
+              <i class="fa-solid fa-circle"></i> Gold Earrings
+            </button>
+            <button class="tryon-item-btn" onclick="selectTryonItem('sunglasses')" data-item="sunglasses">
+              <i class="fa-solid fa-glasses"></i> Sunglasses
+            </button>
+            <button class="tryon-item-btn" onclick="selectTryonItem('crown')" data-item="crown">
+              <i class="fa-solid fa-crown"></i> Tiara
+            </button>
+          </div>
+          <div class="flex items-center gap-4 mt-2">
+            <button class="capture-btn" onclick="capturePhoto()" title="Take Photo"></button>
+            <button onclick="stopWebcam()" class="px-6 py-3 rounded-xl border border-red-500/30 text-red-400 hover:bg-red-500/10 transition-all text-sm">
+              <i class="fa-solid fa-stop mr-2"></i>Stop Camera
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Captured Photos Gallery -->
+      <div class="mt-12" id="capturedGallery" style="display:none;">
+        <h3 class="text-xl font-display mb-6 text-center">Your Captures</h3>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="galleryGrid"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Editorial Section -->
+  <section id="collections" class="py-32 relative overflow-hidden">
+    <div class="absolute inset-0 opacity-30">
+      <div class="absolute top-0 right-0 w-96 h-96 bg-luxury-gold rounded-full filter blur-[150px]"></div>
+      <div class="absolute bottom-0 left-0 w-96 h-96 bg-luxury-gold rounded-full filter blur-[150px]"></div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-6 relative z-10">
+      <div class="grid md:grid-cols-2 gap-16 items-center">
+        <div class="reveal-text">
+          <p class="text-luxury-gold text-xs uppercase tracking-[0.4em] mb-4">The Philosophy</p>
+          <h2 class="text-4xl md:text-5xl font-display font-light mb-6 leading-tight">
+            Crafted for the<br><span class="italic text-luxury-gold">Discerning</span>
+          </h2>
+          <div class="gold-line !mx-0"></div>
+          <p class="text-gray-300 leading-relaxed mb-8 font-light">
+            At LuxeBloom, we believe luxury is not about excess—it's about intention. 
+            Every piece in our collection is chosen not just for its beauty, but for its 
+            ability to tell a story, evoke emotion, and stand the test of time.
+          </p>
+          <p class="text-gray-400 leading-relaxed mb-10 font-light">
+            From the ateliers of Milan to the studios of Nairobi, we curate garments 
+            that honor craftsmanship, celebrate individuality, and empower the modern 
+            woman to bloom with confidence.
+          </p>
+          <button class="magnetic-btn bg-luxury-gold text-black px-10 py-4 text-sm uppercase tracking-[0.3em] font-medium">
+            <span>Our Story</span>
+          </button>
+        </div>
+
+        <div class="relative reveal-text">
+          <div class="aspect-[3/4] rounded-2xl overflow-hidden">
+            <img src="https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=800&h=1000&fit=crop&q=80" 
+                 alt="LuxeBloom Editorial" 
+                 class="w-full h-full object-cover hover:scale-105 transition-transform duration-700">
+          </div>
+          <div class="absolute -bottom-8 -left-8 glass-light p-8 rounded-2xl max-w-xs hidden md:block">
+            <p class="font-display text-2xl italic text-luxury-gold mb-2">"Elegance is refusal."</p>
+            <p class="text-gray-400 text-sm">— Coco Chanel</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats Section -->
+  <section class="py-24 border-y border-white/5">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+        <div class="reveal-text">
+          <p class="text-4xl md:text-5xl font-display text-luxury-gold mb-2 counter" data-target="500">0</p>
+          <p class="text-xs uppercase tracking-[0.3em] text-gray-400">Curated Pieces</p>
+        </div>
+        <div class="reveal-text">
+          <p class="text-4xl md:text-5xl font-display text-luxury-gold mb-2 counter" data-target="50">0</p>
+          <p class="text-xs uppercase tracking-[0.3em] text-gray-400">Designers</p>
+        </div>
+        <div class="reveal-text">
+          <p class="text-4xl md:text-5xl font-display text-luxury-gold mb-2 counter" data-target="12">0</p>
+          <p class="text-xs uppercase tracking-[0.3em] text-gray-400">Countries</p>
+        </div>
+        <div class="reveal-text">
+          <p class="text-4xl md:text-5xl font-display text-luxury-gold mb-2 counter" data-target="1000">0</p>
+          <p class="text-xs uppercase tracking-[0.3em] text-gray-400">Happy Clients</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Newsletter -->
+  <section class="py-32 relative overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-r from-luxury-dark to-luxury-black"></div>
+    <div class="max-w-3xl mx-auto px-6 text-center relative z-10">
+      <p class="text-luxury-gold text-xs uppercase tracking-[0.4em] mb-4 reveal-text">Join the Inner Circle</p>
+      <h2 class="text-4xl md:text-5xl font-display font-light mb-6 reveal-text">Bloom With Us</h2>
+      <p class="text-gray-400 mb-10 font-light reveal-text">
+        Subscribe for exclusive early access to new collections, private sales, and curated style notes.
+      </p>
+      <form class="flex flex-col sm:flex-row gap-4 max-w-lg mx-auto reveal-text" onsubmit="event.preventDefault(); showToast('Welcome to the inner circle!', 'success')">
+        <input type="email" 
+               placeholder="Your email address" 
+               class="flex-1 bg-white/5 border border-white/10 rounded-xl px-6 py-4 text-white placeholder-gray-500 focus:outline-none focus:border-luxury-gold transition-colors duration-300"
+               required>
+        <button type="submit" 
+                class="magnetic-btn bg-white text-black px-8 py-4 rounded-xl font-medium uppercase tracking-wider text-sm whitespace-nowrap">
+          <span>Subscribe</span>
+        </button>
+      </form>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-luxury-dark pt-24 pb-12 border-t border-white/5">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="grid md:grid-cols-4 gap-12 mb-16">
+        <div class="md:col-span-1">
+          <h2 class="text-3xl font-display font-bold tracking-wider mb-6">LUXEBLOOM</h2>
+          <p class="text-gray-400 text-sm leading-relaxed mb-6 font-light">
+            Curating timeless luxury for the modern woman. Based in Nairobi, shipping worldwide.
+          </p>
+          <div class="flex gap-4">
+            <a href="#" class="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center hover:border-luxury-gold hover:text-luxury-gold transition-all duration-300" aria-label="Instagram">
+              <i class="fa-brands fa-instagram"></i>
+            </a>
+            <a href="#" class="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center hover:border-luxury-gold hover:text-luxury-gold transition-all duration-300" aria-label="Pinterest">
+              <i class="fa-brands fa-pinterest-p"></i>
+            </a>
+            <a href="#" class="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center hover:border-luxury-gold hover:text-luxury-gold transition-all duration-300" aria-label="Twitter">
+              <i class="fa-brands fa-x-twitter"></i>
+            </a>
+          </div>
+        </div>
+
+        <div>
+          <h3 class="text-xs uppercase tracking-[0.3em] mb-6 text-gray-300">Shop</h3>
+          <ul class="space-y-3 text-sm text-gray-400 font-light">
+            <li><a href="#" class="hover:text-luxury-gold transition-colors duration-300">New Arrivals</a></li>
+            <li><a href="#" class="hover:text-luxury-gold transition-colors duration-300">Dresses</a></li>
+            <li><a href="#" class="hover:text-luxury-gold transition-colors duration-300">Outerwear</a></li>
+            <li><a href="#" class="hover:text-luxury-gold transition-colors duration-300">Accessories</a></li>
+            <li><a href="#" class="hover:text-luxury-gold transition-colors duration-300">Sale</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 class="text-xs uppercase tracking-[0.3em] mb-6 text-gray-300">Company</h3>
+          <ul class="space-y-3 text-sm text-gray-400 font-light">
+            <li><a href="#" class="hover:text-luxury-gold transition-colors duration-300">About Us</a></li>
+            <li><a href="#" class="hover:text-luxury-gold transition-colors duration-300">Sustainability</a></li>
+            <li><a href="#" class="hover:text-luxury-gold transition-colors duration-300">Careers</a></li>
+            <li><a href="#" class="hover:text-luxury-gold transition-colors duration-300">Press</a></li>
+            <li><a href="#" class="hover:text-luxury-gold transition-colors duration-300">Contact</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 class="text-xs uppercase tracking-[0.3em] mb-6 text-gray-300">Support</h3>
+          <ul class="space-y-3 text-sm text-gray-400 font-light">
+            <li><a href="#" class="hover:text-luxury-gold transition-colors duration-300">Shipping & Returns</a></li>
+            <li><a href="#" class="hover:text-luxury-gold transition-colors duration-300">Size Guide</a></li>
+            <li><a href="#" class="hover:text-luxury-gold transition-colors duration-300">FAQ</a></li>
+            <li><a href="#" class="hover:text-luxury-gold transition-colors duration-300">Privacy Policy</a></li>
+            <li><a href="#" class="hover:text-luxury-gold transition-colors duration-300">Terms of Service</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="section-divider mb-8"></div>
+      <div class="flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-gray-500">
+        <p>© 2026 LuxeBloom Closet. All rights reserved.</p>
+        <p class="flex items-center gap-2">
+          <i class="fa-solid fa-location-dot text-luxury-gold"></i>
+          Nairobi, Kenya
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="fixed bottom-8 right-8 glass-light px-6 py-4 rounded-xl transform translate-y-20 opacity-0 transition-all duration-500 z-50 flex items-center gap-3">
+    <i class="fa-solid fa-check-circle text-luxury-gold" id="toastIcon"></i>
+    <span class="text-sm" id="toastMessage">Added to your closet</span>
+  </div>
+
+  <script>
+    // ==================== PRODUCT DATA ====================
+    const products = [
+      {
+        id: 1,
+        name: "Silk Cascade Dress",
+        category: "Evening Wear",
+        price: 28500,
+        description: "Fluid silk with cascading silhouette",
+        colors: 4,
+        image: "https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=600&h=800&fit=crop&q=80"
+      },
+      {
+        id: 2,
+        name: "Cashmere Oversized Coat",
+        category: "Outerwear",
+        price: 45000,
+        description: "Italian cashmere blend, oversized fit",
+        colors: 2,
+        image: "https://images.unsplash.com/photo-1539533018447-63fcce2678e3?w=600&h=800&fit=crop&q=80"
+      },
+      {
+        id: 3,
+        name: "Satin Evening Gown",
+        category: "Gowns",
+        price: 32000,
+        description: "Liquid satin with draped neckline",
+        colors: 3,
+        image: "https://images.unsplash.com/photo-1566174053879-31528523f8ae?w=600&h=800&fit=crop&q=80"
+      },
+      {
+        id: 4,
+        name: "Leather Trousers",
+        category: "Bottoms",
+        price: 18900,
+        description: "Premium lambskin leather, tailored fit",
+        colors: 2,
+        image: "https://images.unsplash.com/photo-1509631179647-0177331693ae?w=600&h=800&fit=crop&q=80"
+      },
+      {
+        id: 5,
+        name: "Pearl Drop Earrings",
+        category: "Jewelry",
+        price: 12500,
+        description: "Freshwater pearls with 18k gold hooks",
+        colors: 1,
+        image: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=600&h=800&fit=crop&q=80"
+      },
+      {
+        id: 6,
+        name: "Velvet Blazer",
+        category: "Outerwear",
+        price: 24500,
+        description: "Rich velvet with satin lapels",
+        colors: 3,
+        image: "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=600&h=800&fit=crop&q=80"
+      },
+      {
+        id: 7,
+        name: "Lace Midi Skirt",
+        category: "Bottoms",
+        price: 15800,
+        description: "French lace with silk lining",
+        colors: 2,
+        image: "https://images.unsplash.com/photo-1583496661160-fb5886a0uj77?w=600&h=800&fit=crop&q=80"
+      },
+      {
+        id: 8,
+        name: "Gold Chain Belt",
+        category: "Accessories",
+        price: 8900,
+        description: "Interlocking chains with logo clasp",
+        colors: 1,
+        image: "https://images.unsplash.com/photo-1606760227091-3dd870d97f1d?w=600&h=800&fit=crop&q=80"
+      }
+    ];
+
+    // ==================== CART SYSTEM ====================
+    let cart = [];
+    const CART_KEY = 'luxebloom_cart';
+
+    function loadCart() {
+      const saved = localStorage.getItem(CART_KEY);
+      if (saved) {
+        try {
+          cart = JSON.parse(saved);
+        } catch(e) { cart = []; }
+      }
+      updateCartUI();
+    }
+
+    function saveCart() {
+      localStorage.setItem(CART_KEY, JSON.stringify(cart));
+      updateCartUI();
+    }
+
+    function addToCart(productId) {
+      const product = products.find(p => p.id === productId);
+      if (!product) return;
+
+      const existing = cart.find(item => item.id === productId);
+      if (existing) {
+        existing.qty++;
+      } else {
+        cart.push({
+          id: product.id,
+          name: product.name,
+          price: product.price,
+          image: product.image,
+          qty: 1
+        });
+      }
+      saveCart();
+      showToast(`${product.name} added to closet`, 'success');
+
+      // Animate cart icon
+      const cartCount = document.getElementById('cartCount');
+      cartCount.classList.add('cart-badge');
+      setTimeout(() => cartCount.classList.remove('cart-badge'), 300);
+    }
+
+    function removeFromCart(productId) {
+      cart = cart.filter(item => item.id !== productId);
+      saveCart();
+      renderCartItems();
+    }
+
+    function updateQty(productId, delta) {
+      const item = cart.find(item => item.id === productId);
+      if (!item) return;
+      item.qty += delta;
+      if (item.qty <= 0) {
+        removeFromCart(productId);
+        return;
+      }
+      saveCart();
+      renderCartItems();
+    }
+
+    function clearCart() {
+      if (cart.length === 0) return;
+      if (!confirm('Are you sure you want to empty your closet?')) return;
+      cart = [];
+      saveCart();
+      renderCartItems();
+      showToast('Closet emptied', 'info');
+    }
+
+    function updateCartUI() {
+      const totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
+      const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+
+      document.getElementById('cartCount').textContent = totalItems;
+      document.getElementById('cartItemCount').textContent = totalItems;
+      document.getElementById('cartSubtotal').textContent = formatPrice(totalPrice);
+      document.getElementById('cartTotal').textContent = formatPrice(totalPrice);
+
+      // Show/hide badge
+      const badge = document.getElementById('cartCount');
+      badge.style.opacity = totalItems > 0 ? '1' : '0';
+    }
+
+    function renderCartItems() {
+      const container = document.getElementById('cartItems');
+      const emptyState = document.getElementById('emptyCart');
+
+      if (cart.length === 0) {
+        container.innerHTML = `
+          <div class="text-center py-16 text-gray-500" id="emptyCart">
+            <i class="fa-solid fa-bag-shopping text-4xl mb-4 opacity-30"></i>
+            <p class="font-light">Your closet is empty</p>
+            <p class="text-sm mt-2 opacity-60">Add pieces to begin your collection</p>
+          </div>
+        `;
+        updateCartUI();
+        return;
+      }
+
+      container.innerHTML = cart.map(item => `
+        <div class="cart-item">
+          <img src="${item.image}" alt="${item.name}" class="w-20 h-24 object-cover rounded-lg">
+          <div class="flex-1 flex flex-col justify-between">
+            <div>
+              <h4 class="font-display text-sm mb-1">${item.name}</h4>
+              <p class="text-luxury-gold text-sm">${formatPrice(item.price)}</p>
+            </div>
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <button class="qty-btn" onclick="updateQty(${item.id}, -1)">-</button>
+                <span class="text-sm w-6 text-center">${item.qty}</span>
+                <button class="qty-btn" onclick="updateQty(${item.id}, 1)">+</button>
+              </div>
+              <button class="remove-btn" onclick="removeFromCart(${item.id})" title="Remove">
+                <i class="fa-solid fa-trash"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+
+      updateCartUI();
+    }
+
+    function openCart() {
+      renderCartItems();
+      document.getElementById('cartSidebar').classList.add('open');
+      document.getElementById('cartOverlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeCart() {
+      document.getElementById('cartSidebar').classList.remove('open');
+      document.getElementById('cartOverlay').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    function checkout() {
+      if (cart.length === 0) {
+        showToast('Your closet is empty', 'error');
+        return;
+      }
+      showToast('Proceeding to checkout...', 'success');
+      // In production, redirect to checkout page
+    }
+
+    function formatPrice(price) {
+      return 'KSh ' + price.toLocaleString('en-KE');
+    }
+
+    // ==================== RENDER PRODUCTS ====================
+    function renderProducts() {
+      const grid = document.getElementById('productsGrid');
+      grid.innerHTML = products.map(product => `
+        <div class="product-card bg-luxury-gray rounded-2xl overflow-hidden group cursor-pointer reveal-text">
+          <div class="relative overflow-hidden h-[28rem]">
+            <img src="${product.image}" alt="${product.name}" class="product-image w-full h-full object-cover">
+            <div class="product-overlay">
+              <button class="w-full bg-white text-black py-4 rounded-xl font-medium uppercase tracking-wider text-xs hover:bg-luxury-gold transition-colors duration-300" onclick="addToCart(${product.id})">
+                Add to Closet
+              </button>
+            </div>
+            <div class="absolute top-4 right-4">
+              <button class="w-10 h-10 rounded-full glass flex items-center justify-center hover:bg-luxury-gold hover:text-black transition-all duration-300" aria-label="Add to wishlist">
+                <i class="fa-regular fa-heart text-sm"></i>
+              </button>
+            </div>
+          </div>
+          <div class="p-6">
+            <p class="text-luxury-gold text-xs uppercase tracking-wider mb-2">${product.category}</p>
+            <h3 class="text-lg font-display mb-2 group-hover:text-luxury-gold transition-colors duration-300">${product.name}</h3>
+            <p class="text-gray-400 text-sm font-light">${product.description}</p>
+            <div class="flex justify-between items-center mt-4 pt-4 border-t border-white/5">
+              <span class="text-luxury-gold font-display text-xl">${formatPrice(product.price)}</span>
+              <span class="text-gray-500 text-xs">${product.colors} color${product.colors > 1 ? 's' : ''}</span>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // ==================== VIRTUAL TRY-ON ====================
+    let webcamStream = null;
+    let currentTryonItem = 'necklace';
+    let animationId = null;
+
+    const tryonItems = {
+      necklace: { emoji: '💎', y: 0.55, size: 80 },
+      earrings: { emoji: '✨', y: 0.35, size: 40 },
+      sunglasses: { emoji: '🕶️', y: 0.30, size: 100 },
+      crown: { emoji: '👑', y: 0.15, size: 90 }
+    };
+
+    async function startWebcam() {
+      try {
+        const video = document.getElementById('webcamVideo');
+        const canvas = document.getElementById('tryonCanvas');
+        const placeholder = document.getElementById('webcamPlaceholder');
+        const controls = document.getElementById('tryonControls');
+
+        webcamStream = await navigator.mediaDevices.getUserMedia({ 
+          video: { 
+            width: { ideal: 1280 },
+            height: { ideal: 720 },
+            facingMode: 'user'
+          } 
+        });
+
+        video.srcObject = webcamStream;
+        video.style.display = 'block';
+        canvas.style.display = 'block';
+        placeholder.style.display = 'none';
+        controls.style.display = 'flex';
+
+        video.onloadedmetadata = () => {
+          canvas.width = video.videoWidth;
+          canvas.height = video.videoHeight;
+          startOverlayLoop();
+        };
+
+        showToast('Camera enabled', 'success');
+      } catch (err) {
+        console.error('Webcam error:', err);
+        showToast('Could not access camera. Please allow permissions.', 'error');
+      }
+    }
+
+    function stopWebcam() {
+      const video = document.getElementById('webcamVideo');
+      const canvas = document.getElementById('tryonCanvas');
+      const placeholder = document.getElementById('webcamPlaceholder');
+      const controls = document.getElementById('tryonControls');
+
+      if (webcamStream) {
+        webcamStream.getTracks().forEach(track => track.stop());
+        webcamStream = null;
+      }
+
+      if (animationId) {
+        cancelAnimationFrame(animationId);
+        animationId = null;
+      }
+
+      video.srcObject = null;
+      video.style.display = 'none';
+      canvas.style.display = 'none';
+      placeholder.style.display = 'flex';
+      controls.style.display = 'none';
+
+      // Clear canvas
+      const ctx = canvas.getContext('2d');
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    function startOverlayLoop() {
+      const video = document.getElementById('webcamVideo');
+      const canvas = document.getElementById('tryonCanvas');
+      const ctx = canvas.getContext('2d');
+
+      function draw() {
+        if (!webcamStream) return;
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Draw the try-on item (simulated face tracking at center)
+        const item = tryonItems[currentTryonItem];
+        const centerX = canvas.width / 2;
+        const centerY = canvas.height * item.y;
+
+        ctx.save();
+        ctx.font = `${item.size}px serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+
+        // Add glow effect
+        ctx.shadowColor = 'rgba(201, 169, 110, 0.5)';
+        ctx.shadowBlur = 20;
+
+        ctx.fillText(item.emoji, centerX, centerY);
+        ctx.restore();
+
+        // Add subtle label
+        ctx.save();
+        ctx.font = '14px Inter, sans-serif';
+        ctx.fillStyle = 'rgba(255,255,255,0.6)';
+        ctx.textAlign = 'center';
+        ctx.fillText(currentTryonItem.charAt(0).toUpperCase() + currentTryonItem.slice(1), centerX, centerY + item.size/2 + 20);
+        ctx.restore();
+
+        animationId = requestAnimationFrame(draw);
+      }
+
+      draw();
+    }
+
+    function selectTryonItem(item) {
+      currentTryonItem = item;
+      document.querySelectorAll('.tryon-item-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.item === item);
+      });
+    }
+
+    function capturePhoto() {
+      const video = document.getElementById('webcamVideo');
+      const canvas = document.getElementById('tryonCanvas');
+      const gallery = document.getElementById('capturedGallery');
+      const grid = document.getElementById('galleryGrid');
+
+      if (!webcamStream) return;
+
+      // Create composite canvas
+      const composite = document.createElement('canvas');
+      composite.width = video.videoWidth;
+      composite.height = video.videoHeight;
+      const ctx = composite.getContext('2d');
+
+      // Draw video frame
+      ctx.translate(composite.width, 0);
+      ctx.scale(-1, 1); // Un-mirror for save
+      ctx.drawImage(video, 0, 0);
+      ctx.setTransform(1, 0, 0, 1, 0, 0); // Reset transform
+
+      // Draw overlay (need to mirror it too)
+      ctx.translate(composite.width, 0);
+      ctx.scale(-1, 1);
+      const item = tryonItems[currentTryonItem];
+      const centerX = composite.width / 2;
+      const centerY = composite.height * item.y;
+      ctx.font = `${item.size}px serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.shadowColor = 'rgba(201, 169, 110, 0.5)';
+      ctx.shadowBlur = 20;
+      ctx.fillText(item.emoji, centerX, centerY);
+
+      // Save and display
+      const dataUrl = composite.toDataURL('image/png');
+
+      const imgDiv = document.createElement('div');
+      imgDiv.className = 'relative group rounded-xl overflow-hidden';
+      imgDiv.innerHTML = `
+        <img src="${dataUrl}" class="w-full aspect-square object-cover">
+        <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+          <a href="${dataUrl}" download="luxebloom-tryon-${Date.now()}.png" class="w-10 h-10 rounded-full bg-white text-black flex items-center justify-center hover:bg-luxury-gold transition-colors">
+            <i class="fa-solid fa-download text-sm"></i>
+          </a>
+          <button onclick="this.closest('.relative').remove()" class="w-10 h-10 rounded-full bg-red-500 text-white flex items-center justify-center hover:bg-red-600 transition-colors">
+            <i class="fa-solid fa-trash text-sm"></i>
+          </button>
+        </div>
+      `;
+
+      grid.prepend(imgDiv);
+      gallery.style.display = 'block';
+
+      showToast('Photo captured!', 'success');
+    }
+
+    // ==================== TOAST SYSTEM ====================
+    function showToast(message, type = 'success') {
+      const toast = document.getElementById('toast');
+      const toastIcon = document.getElementById('toastIcon');
+      const toastMessage = document.getElementById('toastMessage');
+
+      toastMessage.textContent = message;
+
+      if (type === 'error') {
+        toastIcon.className = 'fa-solid fa-circle-xmark text-red-400';
+      } else if (type === 'info') {
+        toastIcon.className = 'fa-solid fa-circle-info text-blue-400';
+      } else {
+        toastIcon.className = 'fa-solid fa-check-circle text-luxury-gold';
+      }
+
+      toast.classList.remove('translate-y-20', 'opacity-0');
+
+      setTimeout(() => {
+        toast.classList.add('translate-y-20', 'opacity-0');
+      }, 3000);
+    }
+
+    // ==================== INITIALIZATION ====================
+    gsap.registerPlugin(ScrollTrigger);
+
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        document.getElementById('loader').classList.add('hidden');
+        gsap.to('#heroSubtitle', { opacity: 1, y: 0, duration: 1, delay: 0.3, ease: 'power3.out' });
+        gsap.to('#heroTitle', { opacity: 1, y: 0, duration: 1, delay: 0.5, ease: 'power3.out' });
+        gsap.to('#heroDesc', { opacity: 1, y: 0, duration: 1, delay: 0.7, ease: 'power3.out' });
+      }, 1500);
+    });
+
+    // Navbar scroll
+    let lastScroll = 0;
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      const currentScroll = window.pageYOffset;
+      if (currentScroll > 100) {
+        navbar.classList.add('py-3');
+        navbar.classList.remove('py-5');
+      } else {
+        navbar.classList.add('py-5');
+        navbar.classList.remove('py-3');
+      }
+      lastScroll = currentScroll;
+    });
+
+    // Scroll reveals
+    const revealElements = document.querySelectorAll('.reveal-text');
+    revealElements.forEach((element, index) => {
+      gsap.fromTo(element, 
+        { opacity: 0, y: 40 },
+        {
+          opacity: 1, y: 0, duration: 0.8, ease: 'power3.out',
+          scrollTrigger: { trigger: element, start: 'top 85%', toggleActions: 'play none none none' },
+          delay: index % 4 * 0.1
+        }
+      );
+    });
+
+    // Counters
+    document.querySelectorAll('.counter').forEach(counter => {
+      const target = parseInt(counter.getAttribute('data-target'));
+      ScrollTrigger.create({
+        trigger: counter, start: 'top 85%',
+        onEnter: () => {
+          gsap.to(counter, { innerHTML: target, duration: 2, snap: { innerHTML: 1 }, ease: 'power2.out' });
+        }
+      });
+    });
+
+    // Mobile menu
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const closeMenuBtn = document.getElementById('closeMenuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+
+    function toggleMenu() {
+      mobileMenu.classList.toggle('open');
+      document.body.style.overflow = mobileMenu.classList.contains('open') ? 'hidden' : '';
+    }
+    mobileMenuBtn.addEventListener('click', toggleMenu);
+    closeMenuBtn.addEventListener('click', toggleMenu);
+    document.querySelectorAll('.mobile-link').forEach(link => link.addEventListener('click', toggleMenu));
+
+    // Magnetic buttons
+    document.querySelectorAll('.magnetic-btn').forEach(btn => {
+      btn.addEventListener('mousemove', (e) => {
+        const rect = btn.getBoundingClientRect();
+        const x = e.clientX - rect.left - rect.width / 2;
+        const y = e.clientY - rect.top - rect.height / 2;
+        btn.style.transform = `translate(${x * 0.2}px, ${y * 0.2}px)`;
+      });
+      btn.addEventListener('mouseleave', () => { btn.style.transform = 'translate(0, 0)'; });
+    });
+
+    // Smooth scroll
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+
+    // Initialize
+    renderProducts();
+    loadCart();
+  </script>
+</body>
+</html>
